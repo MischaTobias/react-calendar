@@ -2,27 +2,21 @@ import { useState } from "react";
 
 import { Calendar } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { addHours } from "date-fns";
 
-import { CalendarEvent, CalendarModal, NavBar } from "../";
+import {
+  CalendarEvent,
+  CalendarModal,
+  FabAddNew,
+  FabDelete,
+  NavBar,
+} from "../";
 import { getMessagesEN, localizer } from "../../helpers";
 
-export const events = [
-  {
-    id: 1,
-    title: "Comicon",
-    notes: "Wear your favorite suit!",
-    start: new Date(),
-    end: addHours(new Date(), 2),
-    bgColor: "#007bff",
-    user: {
-      _id: 1,
-      name: "Mischa Tobias",
-    },
-  },
-];
+import { useCalendarStore, useUiStore } from "../../hooks";
 
 export const CalendarPage = () => {
+  const { openDateModal } = useUiStore();
+  const { events, setActiveEvent } = useCalendarStore();
   const [lastView, setLastView] = useState(
     localStorage.getItem("lastView") || "month"
   );
@@ -42,10 +36,10 @@ export const CalendarPage = () => {
   };
 
   const onDoubleClick = (event) => {
-    console.log({ doubleClick: event });
+    openDateModal();
   };
   const onSelect = (event) => {
-    console.log({ click: event });
+    setActiveEvent(event);
   };
   const onViewChanged = (event) => {
     localStorage.setItem("lastView", event);
@@ -72,6 +66,8 @@ export const CalendarPage = () => {
       />
 
       <CalendarModal />
+      <FabAddNew />
+      <FabDelete />
     </>
   );
 };
